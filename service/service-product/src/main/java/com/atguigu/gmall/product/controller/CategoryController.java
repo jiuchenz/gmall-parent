@@ -33,7 +33,6 @@ public class CategoryController {
 
     @GetMapping("/getCategory1")
     public Result getCategory1(){
-        int i = 1/0;
         List<BaseCategory1> category1s = baseCategory1Service.list();
         return Result.ok(category1s);
     }
