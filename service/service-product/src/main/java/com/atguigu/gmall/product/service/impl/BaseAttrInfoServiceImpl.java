@@ -28,7 +28,6 @@ public class BaseAttrInfoServiceImpl extends ServiceImpl<BaseAttrInfoMapper, Bas
 
     @Override
     public List<BaseAttrInfo> getArrInfoList(Long c1Id, Long c2Id, Long c3Id) {
-
         List<BaseAttrInfo> list = baseAttrInfoMapper.getArrInfoList(c1Id,c2Id,c3Id);
         return list;
     }

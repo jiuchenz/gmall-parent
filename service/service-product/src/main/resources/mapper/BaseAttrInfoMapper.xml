@@ -15,6 +15,7 @@
         <id property="id" column="id"/>
         <collection property="attrValueList" ofType="com.atguigu.gmall.model.product.BaseAttrValue" autoMapping="true">
             <id property="id" column="vid"/>
+            <result property="valueName" column="vname"/>
         </collection>
     </resultMap>
 
@@ -29,10 +30,10 @@
             <if test="c1Id != 0">
                 (bai.category_id = #{c1Id} and bai.category_level = 1)
             </if>
-            <if test="c1Id != 0">
+            <if test="c2Id != 0">
                 or (bai.category_id = #{c2Id} and bai.category_level = 2)
             </if>
-            <if test="c1Id != 0">
+            <if test="c3Id != 0">
                 or (bai.category_id = #{c3Id} and bai.category_level = 3)
             </if>
         </where>
