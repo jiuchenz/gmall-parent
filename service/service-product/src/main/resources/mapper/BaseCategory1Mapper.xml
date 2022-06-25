@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.atguigu.gmall.product.mapper.BaseCategory1Mapper">
+
+    <resultMap id="CategoryVoMap" type="com.atguigu.gmall.model.vo.CategoryVo">
+        <result column="id" property="categoryId"/>
+        <result column="name" property="categoryName"/>
+        <collection property="categoryChild" ofType="com.atguigu.gmall.model.vo.CategoryVo">
+            <result column="bc2id" property="categoryId"/>
+            <result column="bc2name" property="categoryName"/>
+            <collection property="categoryChild" ofType="com.atguigu.gmall.model.vo.CategoryVo">
+                <result column="bc3id" property="categoryId"/>
+                <result column="bc3name" property="categoryName"/>
+            </collection>
+        </collection>
+    </resultMap>
+
+    <select id="getCategorys" resultMap="CategoryVoMap">
+        SELECT bc1.*,bc2.id bc2id,bc2.name bc2name,bc3.id bc3id,bc3.name bc3name
+        from base_category1 bc1
+        left JOIN base_category2 bc2
+        on bc1.id = bc2.category1_id
+        left join base_category3 bc3
+        on bc2.id = bc3.category2_id
+    </select>
+</mapper>
