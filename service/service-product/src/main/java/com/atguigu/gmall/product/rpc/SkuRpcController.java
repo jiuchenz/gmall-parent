@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -68,9 +69,15 @@ public class SkuRpcController {
      * @param spuId
      * @return
      */
-    @GetMapping("sku/saleattrvalue/json/{spuId}")
+    @GetMapping("/sku/saleattrvalue/json/{spuId}")
     public Result<String> getSpuAllSkuSaleValueJson(@PathVariable("spuId") Long spuId){
         String json = spuAllSkuSaleValueService.getSpuAllSkuSaleValueJson(spuId);
         return Result.ok(json);
+    }
+
+    @GetMapping("/sku/info/getPrice/{skuId}")
+    public Result<BigDecimal> getSkuPrice(@PathVariable("skuId") Long skuId){
+        BigDecimal price = skuInfoService.getSkuPrice(skuId);
+        return Result.ok();
     }
 }

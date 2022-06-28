@@ -5,4 +5,7 @@ spring:
     allow-bean-definition-overriding: true
   autoconfigure:
     exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
-
+  redis:
+    host: 192.168.170.130
+    port: 6379
+    password: zss123456

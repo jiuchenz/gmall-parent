@@ -20,7 +20,6 @@ public class CategoryRpcController {
 
     @GetMapping("/category/all")
     public Result<List<CategoryVo>> getCategorys(){
-
         List<CategoryVo> list = categoryBizService.getCategorys();
         return Result.ok(list);
     }

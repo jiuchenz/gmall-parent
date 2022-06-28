@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -72,6 +73,18 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoMapper, SkuInfo>
     @Override
     public void cancelSale(Long skuId) {
         skuInfoMapper.updateSale(skuId,0);
+    }
+
+    @Override
+    public List<Long> getSkuAllId() {
+
+        return skuInfoMapper.getSkuAllId();
+    }
+
+    @Override
+    public BigDecimal getSkuPrice(Long skuId) {
+
+        return skuInfoMapper.getSkuPrice(skuId);
     }
 }
 
