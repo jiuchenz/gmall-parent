@@ -11,7 +11,7 @@
         <module>mall-cache-starter</module>
     </modules>
 
-    <!--引入spring boot 父工程111222-->
+    <!--引入spring boot 父工程11122-->
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
