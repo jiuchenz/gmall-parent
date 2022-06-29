@@ -1,5 +1,6 @@
 package com.atguigu.gmall.product.service.impl;
 
+import com.atguigu.gmall.common.constant.RedisConst;
 import com.atguigu.gmall.model.product.SkuAttrValue;
 import com.atguigu.gmall.model.product.SkuImage;
 import com.atguigu.gmall.model.product.SkuInfo;
@@ -11,11 +12,15 @@ import com.atguigu.gmall.product.service.SkuInfoService;
 import com.atguigu.gmall.product.service.SkuSaleAttrValueService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  *
@@ -36,6 +41,22 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoMapper, SkuInfo>
     @Autowired
     SkuSaleAttrValueService skuSaleAttrValueService;
 
+    @Autowired
+    StringRedisTemplate redisTemplatel;
+
+    static ScheduledExecutorService threadPool = Executors.newScheduledThreadPool(4);
+
+    @Override
+    public void updateSkuInfo(SkuInfo skuInfo) {
+        //1.改数据库
+        //2.双删缓存
+        //2.1,立即删除，可以解决80%问题
+        redisTemplatel.delete(RedisConst.SKU_INFO_CACHE_KEY_PREFIX+skuInfo.getId());
+        //2.2,延迟删除，解决99%的问题
+        //拿到一个线程的延迟任务
+        threadPool.schedule(()->redisTemplatel.delete(RedisConst.SKU_INFO_CACHE_KEY_PREFIX+skuInfo.getId()),10, TimeUnit.SECONDS);
+        //立即结束
+    }
 
     @Transactional
     @Override

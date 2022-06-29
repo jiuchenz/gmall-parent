@@ -1,4 +1,4 @@
-package com.atguigu.gmall.common.config;
+package com.atguigu.gmall.starter.cache;
 
 
 import org.redisson.Redisson;
@@ -27,6 +27,7 @@ public class RedissonConfiguration {
         config.useSingleServer()
                 .setAddress("redis://"+host+":"+port)
                 .setPassword(password);
+        //        config.setLockWatchdogTimeout()//自定义看门狗时间（和删除时间一致）
         //2.创建客户端
         RedissonClient redissonClient = Redisson.create(config);
         return redissonClient;

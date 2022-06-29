@@ -3,12 +3,13 @@ package com.atguigu.gmall.item.service.impl;
 import com.atguigu.gmall.common.constant.RedisConst;
 import com.atguigu.gmall.common.result.Result;
 import com.atguigu.gmall.feign.product.SkuFeignClient;
-import com.atguigu.gmall.item.component.CacheService;
 import com.atguigu.gmall.item.service.ItemBizService;
 import com.atguigu.gmall.model.product.SkuInfo;
 import com.atguigu.gmall.model.product.SpuSaleAttr;
 import com.atguigu.gmall.model.vo.CategoryView;
 import com.atguigu.gmall.model.vo.SkuDetailVo;
+import com.atguigu.gmall.starter.cache.annotation.Cache;
+import com.atguigu.gmall.starter.cache.component.CacheService;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RBloomFilter;
 import org.redisson.api.RLock;
@@ -33,15 +34,25 @@ public class ItemBizServiceImpl implements ItemBizService {
     @Autowired
     RedissonClient redissonClient;
 
+    @Cache(
+            key = RedisConst.SKU_INFO_CACHE_KEY_PREFIX+"#{#params[0]}",
+            bloomName = RedisConst.SKU_BLOOM_FILTER_NAME,
+            bloomIf = "#{#params[0]}",
+            ttl = RedisConst.SKU_INFO_CACHE_TIMEOUT
+    )  //提升通用性。那些问题？  //sku:info:skuid的值
+    @Override
+    public SkuDetailVo getSkuDetail(Long skuId) {
+        return getSkuDetailFromRpc(skuId);
+    }
+
     /**
      * 查询商品信息时添加缓存以及锁以及布隆
      * @param skuId
      * @return
      */
-    @Override
-    public SkuDetailVo getSkuDetail(Long skuId) {
+    public SkuDetailVo getSkuDetailByRedission(Long skuId) {
         //定义缓存名称
-        String cacheName = RedisConst.SKU_INFO_CACHE_PREFIX + skuId;
+        String cacheName = RedisConst.SKU_INFO_CACHE_KEY_PREFIX + skuId;
         //1.先查询缓存
         SkuDetailVo vo = cacheService.getDate(cacheName,SkuDetailVo.class);
         //3.缓存不存在
