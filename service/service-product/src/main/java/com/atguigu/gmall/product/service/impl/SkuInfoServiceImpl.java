@@ -1,6 +1,8 @@
 package com.atguigu.gmall.product.service.impl;
 
 import com.atguigu.gmall.common.constant.RedisConst;
+import com.atguigu.gmall.feign.search.SearchFeignClient;
+import com.atguigu.gmall.model.list.Goods;
 import com.atguigu.gmall.model.product.SkuAttrValue;
 import com.atguigu.gmall.model.product.SkuImage;
 import com.atguigu.gmall.model.product.SkuInfo;
@@ -43,6 +45,9 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoMapper, SkuInfo>
 
     @Autowired
     StringRedisTemplate redisTemplatel;
+
+    @Autowired
+    SearchFeignClient searchFeignClient;
 
     static ScheduledExecutorService threadPool = Executors.newScheduledThreadPool(4);
 
@@ -89,11 +94,20 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoMapper, SkuInfo>
     @Override
     public void onSale(Long skuId) {
         skuInfoMapper.updateSale(skuId,1);
+        //修改elasticsearch,将商品数据添加到es库中
+        Goods goods = this.getGoodsInfoBySkuId(skuId);
+        searchFeignClient.upGoods(goods);
+    }
+
+    private Goods getGoodsInfoBySkuId(Long skuId) {
+        return skuInfoMapper.getGoodsInfoBySkuId(skuId);
     }
 
     @Override
     public void cancelSale(Long skuId) {
         skuInfoMapper.updateSale(skuId,0);
+        //修改elasticsearch,将商品数据从es库中删除
+        searchFeignClient.downGoods(skuId);
     }
 
     @Override

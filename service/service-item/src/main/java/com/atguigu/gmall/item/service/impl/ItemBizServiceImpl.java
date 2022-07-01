@@ -10,6 +10,7 @@ import com.atguigu.gmall.model.vo.CategoryView;
 import com.atguigu.gmall.model.vo.SkuDetailVo;
 import com.atguigu.gmall.starter.cache.annotation.Cache;
 import com.atguigu.gmall.starter.cache.component.CacheService;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RBloomFilter;
 import org.redisson.api.RLock;
@@ -17,8 +18,8 @@ import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -90,33 +91,46 @@ public class ItemBizServiceImpl implements ItemBizService {
         return vo;
     }
 
+    @SneakyThrows
     public SkuDetailVo getSkuDetailFromRpc(Long skuId) {
         //商品详情页信息
         SkuDetailVo skuDetailVo = new SkuDetailVo();
-        //skuInfo sku信息 *
-        Result<SkuInfo> skuInfoResult = skuFeignClient.getSkuInfo(skuId);
-        SkuInfo skuInfo = skuInfoResult.getData();
-        skuDetailVo.setSkuInfo(skuInfo);
+        //1.cf执行skuInfo sku信息 *
+        CompletableFuture<SkuInfo> baseInfoFuture = CompletableFuture.supplyAsync(() -> {
+            Result<SkuInfo> skuInfoResult = skuFeignClient.getSkuInfo(skuId);
+            SkuInfo skuInfo = skuInfoResult.getData();
+            skuDetailVo.setSkuInfo(skuInfo);
+            return skuInfo;
+        });
+        //2.编排 categoryView 分类信息 *
+        CompletableFuture<Void> categoryFuture = baseInfoFuture.thenAcceptAsync((info) -> {
+            Result<CategoryView> categoryViewResult = skuFeignClient.getCategoryView(info.getCategory3Id());
+            skuDetailVo.setCategoryView(categoryViewResult.getData());
+        });
 
-        //categoryView 分类信息 *
-        Result<CategoryView> categoryViewResult = skuFeignClient.getCategoryView(skuInfo.getCategory3Id());
-        CategoryView categoryView = categoryViewResult.getData();
-        skuDetailVo.setCategoryView(categoryView);
+        //3.编排 price 价格 *
+        CompletableFuture<Void> priceFuture = baseInfoFuture.thenAcceptAsync((info) -> {
+            skuDetailVo.setPrice(info.getPrice());
+        });
 
-        //price 价格 *
-        BigDecimal price = skuInfo.getPrice();
-        skuDetailVo.setPrice(price);
+        //4.编排 spuSaleAttrList spu销售信息
+        CompletableFuture<Void> saleAttrFuture = baseInfoFuture.thenAcceptAsync((info) -> {
+            Result<List<SpuSaleAttr>> spuSaleAttrListAndInfoResult = skuFeignClient.getSpuSaleAttrListAndInfo(skuId, info.getSpuId());
+            if (spuSaleAttrListAndInfoResult.isOk()) {
+                skuDetailVo.setSpuSaleAttrList(spuSaleAttrListAndInfoResult.getData());
+            }
+        });
 
-        //spuSaleAttrList spu销售信息
-        Long spuId = skuInfo.getSpuId();
-        Result<List<SpuSaleAttr>> spuSaleAttrListAndInfoResult = skuFeignClient.getSpuSaleAttrListAndInfo(skuId, spuId);
-        List<SpuSaleAttr> spuSaleAttrList = spuSaleAttrListAndInfoResult.getData();
-        skuDetailVo.setSpuSaleAttrList(spuSaleAttrList);
 
-        //valuesSkuJson 销售属性json
-        Result<String> jsonResult= skuFeignClient.getSpuAllSkuSaleValueJson(spuId);
-        String json = jsonResult.getData();
-        skuDetailVo.setValuesSkuJson(json);
+        //5.编排 valuesSkuJson 销售属性json
+        CompletableFuture<Void> skuOtherFuture = baseInfoFuture.thenAcceptAsync((info) -> {
+            Result<String> jsonResult = skuFeignClient.getSpuAllSkuSaleValueJson(info.getSpuId());
+            skuDetailVo.setValuesSkuJson(jsonResult.getData());
+        });
+
+        //6.编排-等所有任务运行完成
+        CompletableFuture.allOf(categoryFuture,priceFuture,saleAttrFuture,skuOtherFuture).get();
+
         return skuDetailVo;
     }
 }

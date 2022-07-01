@@ -36,6 +36,17 @@
             <artifactId>mall-cache-starter</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+        <!--        引入ShardingSphere完成读写分离+分库分表 -->
+        <dependency>
+            <groupId>org.apache.shardingsphere</groupId>
+            <artifactId>shardingsphere-jdbc-core-spring-boot-starter</artifactId>
+            <version>5.1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.atguigu.gmall</groupId>
+            <artifactId>mall-feign-client</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
 </project>
