@@ -3,8 +3,8 @@ package com.atguigu.gmall.search.rpc;
 
 import com.atguigu.gmall.common.result.Result;
 import com.atguigu.gmall.model.list.Goods;
-import com.atguigu.gmall.model.list.SearchResponseVo;
 import com.atguigu.gmall.model.vo.search.SearchParam;
+import com.atguigu.gmall.model.vo.search.SearchResponseVo;
 import com.atguigu.gmall.search.service.GoodsSearchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
