@@ -17,14 +17,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
 import org.springframework.data.elasticsearch.core.SearchHits;
+import org.springframework.data.elasticsearch.core.document.Document;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.Query;
+import org.springframework.data.elasticsearch.core.query.UpdateQuery;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -57,6 +60,24 @@ public class GoodsSearchServiceImpl implements GoodsSearchService {
         //3.根据goods列表转换为SearchResponseVo
         SearchResponseVo vo = buildSearchResponseVo(goods, searchParam);
         return vo;
+    }
+
+    @Override
+    public void incrHotScore(Long skuId, Long score) {
+        UpdateQuery query = buildHotScoreUpdateQuery(skuId,score);
+
+        esTemplate.update(query,IndexCoordinates.of("goods"));
+    }
+
+    private UpdateQuery buildHotScoreUpdateQuery(Long skuId, Long score) {
+        //1.拿到builder
+        UpdateQuery.Builder builder = UpdateQuery.builder("" + skuId);
+        //2.修改热度
+        HashMap<String, Long> map = new HashMap<>();
+        map.put("hotScore",score);
+
+        builder.withDocument(Document.from(map)).withDocAsUpsert(true);
+        return builder.build();
     }
 
     private SearchResponseVo buildSearchResponseVo(SearchHits<Goods> result, SearchParam param) {

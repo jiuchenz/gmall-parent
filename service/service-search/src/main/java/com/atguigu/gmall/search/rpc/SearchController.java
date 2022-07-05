@@ -36,5 +36,13 @@ public class SearchController {
     }
 
 
+    @GetMapping("/incr/hotScore/{skuId}")
+    public Result incrHotScore(@PathVariable("skuId") Long skuId,
+                               @RequestParam("score") Long score){
+        goodsSearchService.incrHotScore(skuId,score);
+        return Result.ok();
+    }
+
+
 
 }

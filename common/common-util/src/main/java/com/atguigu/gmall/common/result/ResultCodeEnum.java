@@ -16,6 +16,8 @@ public enum ResultCodeEnum {
     PAY_RUN(205, "支付中"),
 
     LOGIN_AUTH(208, "未登陆"),
+    LOGIN_FAIL(2081, "登陆失败"),
+    NOAUTH_URL(2082,"非法请求，我们已经记录了你的访问"),
     PERMISSION(209, "没有权限"),
     SECKILL_NO_START(210, "秒杀还没开始"),
     SECKILL_RUN(211, "正在排队中"),
@@ -29,7 +31,6 @@ public enum ResultCodeEnum {
     COUPON_GET(220, "优惠券已经领取"),
     COUPON_LIMIT_GET(221, "优惠券已发放完毕"),
     ;
-
     private Integer code;
 
     private String message;

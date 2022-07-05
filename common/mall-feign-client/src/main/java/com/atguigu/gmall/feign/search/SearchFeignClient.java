@@ -21,4 +21,8 @@ public interface SearchFeignClient {
 
     @PostMapping("/goods")
     Result<Map<String,Object>> search(@RequestBody SearchParam searchParam);
+
+    @GetMapping("/incr/hotScore/{skuId}")
+    public Result incrHotScore(@PathVariable("skuId") Long skuId,
+                               @RequestParam("score") Long score);
 }

@@ -45,4 +45,6 @@ public class UserInfo extends BaseEntity {
     @TableField("user_level")
     private String userLevel;
 
+    @TableField(exist =  false)
+    private String loginIp;
 }

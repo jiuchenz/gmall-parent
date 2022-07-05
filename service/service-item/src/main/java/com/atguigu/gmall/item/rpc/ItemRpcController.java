@@ -20,6 +20,7 @@ public class ItemRpcController {
     @GetMapping("/sku/{skuId}")
     public Result<SkuDetailVo> getSkuDetail(@PathVariable("skuId") Long skuId){
         SkuDetailVo skuDetailVo = itemBizService.getSkuDetail(skuId);
+        itemBizService.incrHotScore(skuId);
         return Result.ok(skuDetailVo);
     }
 }

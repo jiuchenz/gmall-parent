@@ -2,6 +2,7 @@ package com.atguigu.gmall.feign.product;
 
 
 import com.atguigu.gmall.common.result.Result;
+import com.atguigu.gmall.model.cart.CartInfo;
 import com.atguigu.gmall.model.product.SkuInfo;
 import com.atguigu.gmall.model.product.SpuSaleAttr;
 import com.atguigu.gmall.model.vo.CategoryView;
@@ -50,4 +51,7 @@ public interface SkuFeignClient {
 
     @GetMapping("/sku/info/getPrice/{skuId}")
     public Result<BigDecimal> getSkuPrice(@PathVariable("skuId") Long skuId);
+
+    @GetMapping("/cartinfo/{skuId}")
+    public Result<CartInfo> getCartInfoBySkuId(@PathVariable("skuId") Long skuId);
 }

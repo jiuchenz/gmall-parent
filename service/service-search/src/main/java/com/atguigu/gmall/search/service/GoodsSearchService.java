@@ -10,4 +10,6 @@ public interface GoodsSearchService {
     void downGoods(Long skuId);
 
     SearchResponseVo search(SearchParam searchParam);
+
+    void incrHotScore(Long skuId, Long score);
 }

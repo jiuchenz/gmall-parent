@@ -2,7 +2,10 @@ package com.atguigu.gmall.common.util;
 
 //import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 
+import com.atguigu.gmall.model.vo.user.UserAuth;
 import org.springframework.util.StringUtils;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -30,5 +33,20 @@ public class AuthContextHolder {
     public static String getUserTempId(HttpServletRequest request) {
         String userTempId = request.getHeader("userTempId");
         return StringUtils.isEmpty(userTempId) ? "" : userTempId;
+    }
+
+
+    public static UserAuth getUserAuth(){
+        //1.获取当前spring给当前线程绑定的请求对象
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        HttpServletRequest request = attributes.getRequest();
+        String userId = request.getHeader("UserId");
+        String userTempId = request.getHeader("UserTempId");
+        UserAuth userAuth = new UserAuth();
+        if (!StringUtils.isEmpty(userId)){
+            userAuth.setUserId(Long.parseLong(userId));
+        }
+        userAuth.setTempId(userTempId);
+        return userAuth;
     }
 }
