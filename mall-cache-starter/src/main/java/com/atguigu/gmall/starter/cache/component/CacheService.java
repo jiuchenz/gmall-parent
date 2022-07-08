@@ -12,4 +12,6 @@ public interface CacheService {
     <T>void saveDate(String cacheName, T detail, Long CacheTimeout, TimeUnit timeUnit);
 
     <T>void saveDate(String cacheName, T detail);
+
+    void delayDoubleDelete(String cacheKey);
 }

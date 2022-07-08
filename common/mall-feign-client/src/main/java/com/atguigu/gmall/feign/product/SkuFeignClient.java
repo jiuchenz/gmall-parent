@@ -24,21 +24,21 @@ public interface SkuFeignClient {
      * @return
      */
     @GetMapping("/skuInfo/{skuId}")
-    public Result<SkuInfo> getSkuInfo(@PathVariable("skuId") Long skuId);
+    Result<SkuInfo> getSkuInfo(@PathVariable("skuId") Long skuId);
     /**
      * 查询categoryView
      * @param c3id
      * @return
      */
     @GetMapping("/category/{c3id}")
-    public Result<CategoryView> getCategoryView(@PathVariable("c3id") Long c3id);
+    Result<CategoryView> getCategoryView(@PathVariable("c3id") Long c3id);
 
     /**
      * 通过spuid和skuid查询指定sku所属spu下的所有销售属性并将指定sku标识
      * @return
      */
     @GetMapping("/sku/spuInfo/{skuId}/{spuId}")
-    public Result<List<SpuSaleAttr>> getSpuSaleAttrListAndInfo(@PathVariable("skuId") Long skuId,
+    Result<List<SpuSaleAttr>> getSpuSaleAttrListAndInfo(@PathVariable("skuId") Long skuId,
                                                                @PathVariable("spuId") Long spuId);
 
     /**
@@ -47,11 +47,15 @@ public interface SkuFeignClient {
      * @return
      */
     @GetMapping("/sku/saleattrvalue/json/{spuId}")
-    public Result<String> getSpuAllSkuSaleValueJson(@PathVariable("spuId") Long spuId);
+    Result<String> getSpuAllSkuSaleValueJson(@PathVariable("spuId") Long spuId);
 
     @GetMapping("/sku/info/getPrice/{skuId}")
-    public Result<BigDecimal> getSkuPrice(@PathVariable("skuId") Long skuId);
+    Result<BigDecimal> getSkuPrice(@PathVariable("skuId") Long skuId);
 
     @GetMapping("/cartinfo/{skuId}")
-    public Result<CartInfo> getCartInfoBySkuId(@PathVariable("skuId") Long skuId);
+    Result<CartInfo> getCartInfoBySkuId(@PathVariable("skuId") Long skuId);
+
+
+    @GetMapping("/sku/price/shishi/{skuId}")
+    Result<BigDecimal> get1010SkuPrice(@PathVariable("skuId") Long skuId);
 }

@@ -8,6 +8,8 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -15,6 +17,7 @@ public class CacheServiceImpl implements CacheService {
 
     @Autowired
     StringRedisTemplate redisTemplate;
+    ScheduledExecutorService delayExecutor = Executors.newScheduledThreadPool(4);
 
     @Override
     public <T> T getDate(String cacheKey, Class<T> t) {
@@ -47,5 +50,14 @@ public class CacheServiceImpl implements CacheService {
         redisTemplate.opsForValue().set(cacheName,JSONs.toStr(Detail));
     }
 
-
+    @Override
+    public void delayDoubleDelete(String cacheKey) {
+        //延迟双删
+        //1.立即删除
+        redisTemplate.delete(cacheKey);
+        //2.延迟删除
+        delayExecutor.schedule(()->{
+            redisTemplate.delete(cacheKey);
+        },10,TimeUnit.SECONDS);
+    }
 }

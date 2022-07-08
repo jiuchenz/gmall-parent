@@ -8,3 +8,13 @@ spring:
   thymeleaf:
     prefix: classpath:/templates/
     suffix: .html
+
+#配置feign
+#          feign:
+#            client:
+#              config:
+#                default:
+#                  connectTimeout: 1000
+#                  readTimeout: 5000
+#                  retryer: com.atguigu.gmall.common.retry.RequestNeverRetryer
+

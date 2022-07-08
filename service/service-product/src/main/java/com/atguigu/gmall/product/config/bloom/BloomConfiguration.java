@@ -16,7 +16,6 @@ public class BloomConfiguration {
     @Bean
     public ApplicationRunner applicationRunner(){
         return new ApplicationRunner(){
-
             @Override
             public void run(ApplicationArguments args) throws Exception {
                 bloomService.initBloom();

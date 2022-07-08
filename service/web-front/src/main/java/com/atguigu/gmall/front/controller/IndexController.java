@@ -17,7 +17,7 @@ public class IndexController {
     @Autowired
     CategoryFeignClient categoryFeignClient;
 
-    @GetMapping("/")
+    @GetMapping({"/","/index.html"})
     public String indexPage(Model model){
         //远程调用查询三级分类
         Result<List<CategoryVo>> categorys = categoryFeignClient.getCategorys();

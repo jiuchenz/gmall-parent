@@ -15,6 +15,7 @@ import com.atguigu.gmall.product.service.SkuAttrValueService;
 import com.atguigu.gmall.product.service.SkuImageService;
 import com.atguigu.gmall.product.service.SkuInfoService;
 import com.atguigu.gmall.product.service.SkuSaleAttrValueService;
+import com.atguigu.gmall.starter.cache.annotation.Cache;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -120,9 +121,13 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoMapper, SkuInfo>
         return skuInfoMapper.getSkuAllId();
     }
 
+    @Cache(
+            key = RedisConst.SKU_PRICE_CACHE_PREFIX+"#{#params[0]}",
+            bloomName = RedisConst.SKU_BLOOM_FILTER_NAME,
+            bloomIf = "#{#params[0]}"
+    )
     @Override
     public BigDecimal getSkuPrice(Long skuId) {
-
         return skuInfoMapper.getSkuPrice(skuId);
     }
 
@@ -151,6 +156,11 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoMapper, SkuInfo>
 
 
         return cartInfo;
+    }
+
+    @Override
+    public BigDecimal get1010SkuPrice(Long skuId) {
+        return skuInfoMapper.getSkuPrice(skuId);
     }
 }
 
