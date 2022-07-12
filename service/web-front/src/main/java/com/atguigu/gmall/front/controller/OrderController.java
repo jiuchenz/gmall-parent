@@ -22,4 +22,11 @@ public class OrderController {
         model.addAllAttributes(mapResult.getData());
         return "order/trade";
     }
+
+
+    @GetMapping("/myOrder.html")
+    public String orderListPage(){
+        //TODO  列表页数据填充
+        return "order/myOrder";
+    }
 }

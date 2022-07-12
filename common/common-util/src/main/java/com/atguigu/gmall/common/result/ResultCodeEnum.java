@@ -30,8 +30,12 @@ public enum ResultCodeEnum {
     SECKILL_ORDER_SUCCESS(218, "下单成功"),
     COUPON_GET(220, "优惠券已经领取"),
     COUPON_LIMIT_GET(221, "优惠券已发放完毕"),
-    OUT_OF_CART(3001,"购物车已经满了！")
+    OUT_OF_CART(3001,"购物车已经满了！"),
+    ORDER_INVAILD_TOKEN(4000,"页面已经过期，请重新刷新确认"),
+    ORDER_ITEM_NO_STOCK(4001,"库存不足："),
+    ORDER_ITEM_PRICE_CHANGE(4002,"商品价格发生变化，请重新刷新页面。变化商品如下：")
     ;
+
     private Integer code;
 
     private String message;

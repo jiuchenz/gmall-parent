@@ -13,6 +13,8 @@ public class RedisConst {
     public static final String SKU_HOTSCORE = "hotscore:";
     public static final String USER_LOGIN_PREFIX = "user:login:";
     public static final String CART_INFO_PREFIX = "cart:info:";
-    public static final Long CART_SIZE_LIMIT = 200L;
+    public static final Integer CART_SIZE_LIMIT = 200;
     public static final String SKU_PRICE_CACHE_PREFIX = "sku:price:";
+    public static final String TRADE_TOKEN_PREFIX = "trade:token:";
+    public static final String A_KEN_VALUE = "x";
 }
