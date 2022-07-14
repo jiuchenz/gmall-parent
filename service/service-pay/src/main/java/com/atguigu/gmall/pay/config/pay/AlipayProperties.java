@@ -1,8 +1,10 @@
 package com.atguigu.gmall.pay.config.pay;
 
+
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
+
 
 @Data
 @Component
@@ -17,5 +19,6 @@ public class AlipayProperties {
     private String signType; //签名类型
     private String charset;
     private String gatewayUrl; //支付宝网关
+
 
 }

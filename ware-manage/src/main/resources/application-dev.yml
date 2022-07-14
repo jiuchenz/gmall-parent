@@ -59,4 +59,4 @@ spring:
 
 order:
   split:
-    url: http://localhost:8204/api/order/orderSplit
+    url: http://api.gmall.com/api/order/orderSplit  #远程调用订单服务，保存库存帮你拆好单的结果。

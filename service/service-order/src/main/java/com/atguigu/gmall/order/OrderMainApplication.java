@@ -14,18 +14,18 @@ import org.springframework.context.annotation.Import;
 
 
 @Import(AppMybatisPlusConfig.class)
+@EnableAutoHandleException
+@EnableFeignInterceptor
 @EnableFeignClients(basePackages = {
         "com.atguigu.gmall.feign.user",
         "com.atguigu.gmall.feign.cart",
-        "com.atguigu.gmall.feign.product",
-        "com.atguigu.gmall.feign.ware"
+        "com.atguigu.gmall.feign.ware",
+        "com.atguigu.gmall.feign.product"
 })
-@EnableAutoHandleException
-@EnableRabbit
-@EnableFeignInterceptor
+@EnableRabbit  //未来系统中流转的都是json
+@MapperScan(basePackages = "com.atguigu.gmall.order.mapper")
 @EnableThreadPool
 @SpringCloudApplication
-@MapperScan("com.atguigu.gmall.order.mapper")
 public class OrderMainApplication {
     public static void main(String[] args) {
         SpringApplication.run(OrderMainApplication.class,args);

@@ -73,6 +73,7 @@ public class MqConfiguration {
                 false,
                 arguments);
     }
+
     //延迟队列和交换机绑定
     @Bean
     public Binding orderDelayBinding(){
@@ -94,8 +95,6 @@ public class MqConfiguration {
         );
     }
 
-
-
     //订单死信队列
     @Bean
     public Queue orderDeadQueue(){
@@ -115,6 +114,24 @@ public class MqConfiguration {
                 Binding.DestinationType.QUEUE,
                 MqConst.EXCHANGE_ORDER_EVENT,
                 MqConst.RK_ORDER_TIMEOUT,
+                null
+        );
+    }
+
+    //支付成功单队列
+    @Bean
+    public Queue orderPayedQueue(){
+        return new Queue(MqConst.QUEUE_ORDER_PAYED,true,false,false);
+    }
+
+    //支付成功单队列 绑定关系
+    @Bean
+    public Binding orderPayedQueueBinding(){
+        return new Binding(
+                MqConst.QUEUE_ORDER_PAYED,
+                Binding.DestinationType.QUEUE,
+                MqConst.EXCHANGE_ORDER_EVENT,
+                MqConst.RK_ORDER_PAYED,
                 null
         );
     }
